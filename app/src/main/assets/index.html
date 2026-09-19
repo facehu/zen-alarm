@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ZenAlarm</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+    <main class="app">
+        <header class="app-header">
+            <h1>ZenAlarm</h1>
+            <button type="button" id="settingsBtn" class="icon-btn" aria-label="Settings">&#9881;</button>
+        </header>
+
+        <div id="permissionBanner" class="permission-banner hidden"></div>
+        <div id="alarmTree" class="tree"></div>
+        <button type="button" id="addGroupBtn" class="fab">+ New group</button>
+    </main>
+
+    <div id="groupDialog" class="overlay hidden" aria-hidden="true">
+        <div class="modal">
+            <form id="groupForm">
+                <h3 id="groupDialogTitle">Group</h3>
+                <input type="hidden" id="groupId" value="0" />
+
+                <label class="field">Name
+                    <input id="groupName" required />
+                </label>
+
+                <label class="switch-row">
+                    <span>Group enabled</span>
+                    <input type="checkbox" id="groupEnabled" checked />
+                </label>
+
+                <label class="switch-row">
+                    <span>Override Do Not Disturb</span>
+                    <input type="checkbox" id="groupOverrideDnd" />
+                </label>
+
+                <label class="field">Wake-up challenge
+                    <select id="groupChallenge"></select>
+                </label>
+
+                <div id="difficultyBlock" class="field hidden">
+                    <span>Math difficulty</span>
+                    <input type="range" id="groupDifficulty" min="1" max="5" value="3" step="1" />
+                    <output id="groupDifficultyLabel" for="groupDifficulty">Normal</output>
+                </div>
+
+                <label class="field">Snooze (minutes)
+                    <input type="number" id="groupSnooze" min="1" max="60" value="9" />
+                </label>
+
+                <label class="field">Volume ramp (seconds)
+                    <input type="number" id="groupVolumeRamp" min="0" max="300" value="0" />
+                    <p class="hint">0 = full volume immediately. Otherwise fades from silent to 100%.</p>
+                </label>
+
+                <div class="dialog-actions">
+                    <button type="button" id="deleteGroupBtn" class="btn-danger hidden">Delete group</button>
+                    <span class="dialog-spacer"></span>
+                    <button type="button" id="cancelGroupBtn" class="btn-text">Cancel</button>
+                    <button type="button" id="saveGroupBtn" class="btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="alarmDialog" class="overlay hidden" aria-hidden="true">
+        <div class="modal">
+            <form id="alarmForm">
+                <h3 id="alarmDialogTitle">Alarm</h3>
+                <input type="hidden" id="alarmId" value="0" />
+                <input type="hidden" id="alarmGroupId" value="0" />
+
+                <label class="field">Time
+                    <input type="time" id="alarmTime" required />
+                </label>
+
+                <label class="field">Label
+                    <input id="alarmLabel" placeholder="Morning" />
+                </label>
+
+                <label class="switch-row">
+                    <span>Alarm enabled</span>
+                    <input type="checkbox" id="alarmEnabled" checked />
+                </label>
+
+                <fieldset class="repeat-field">
+                    <legend>Repeat</legend>
+                    <div class="day-grid" id="repeatDays">
+                        <label><input type="checkbox" data-day="1" /><span>S</span></label>
+                        <label><input type="checkbox" data-day="2" /><span>M</span></label>
+                        <label><input type="checkbox" data-day="4" /><span>T</span></label>
+                        <label><input type="checkbox" data-day="8" /><span>W</span></label>
+                        <label><input type="checkbox" data-day="16" /><span>T</span></label>
+                        <label><input type="checkbox" data-day="32" /><span>F</span></label>
+                        <label><input type="checkbox" data-day="64" /><span>S</span></label>
+                    </div>
+                    <p class="hint">Leave empty for daily (every day).</p>
+                </fieldset>
+
+                <div class="dialog-actions">
+                    <button type="button" id="deleteAlarmBtn" class="btn-danger hidden">Delete alarm</button>
+                    <span class="dialog-spacer"></span>
+                    <button type="button" id="cancelAlarmBtn" class="btn-text">Cancel</button>
+                    <button type="button" id="saveAlarmBtn" class="btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="permissionDialog" class="overlay hidden" aria-hidden="true">
+        <div class="modal">
+            <h3 id="permissionTitle">Permission</h3>
+            <p id="permissionBody"></p>
+            <p class="perm-note">You can tap <strong>No thanks</strong> - the app still works, but this feature may be limited.</p>
+            <div class="dialog-actions">
+                <button type="button" id="permissionNo" class="btn-text">No thanks</button>
+                <button type="button" id="permissionYes" class="btn-primary">Continue</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="settingsDialog" class="overlay hidden" aria-hidden="true">
+        <div class="modal">
+            <h3>Settings</h3>
+            <label class="switch-row">
+                <span>Show next alarm in notification shade</span>
+                <input type="checkbox" id="settingShowNextAlarm" checked />
+            </label>
+            <p class="hint">Keeps a quiet ongoing notification with the time of your next enabled alarm.</p>
+            <div class="dialog-actions">
+                <span class="dialog-spacer"></span>
+                <button type="button" id="closeSettingsBtn" class="btn-primary">Done</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="confirmDialog" class="overlay hidden" aria-hidden="true">
+        <div class="modal">
+            <h3 id="confirmTitle">Confirm</h3>
+            <p id="confirmMessage"></p>
+            <div class="dialog-actions">
+                <button type="button" id="confirmNo" class="btn-text">Cancel</button>
+                <button type="button" id="confirmYes" class="btn-danger">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

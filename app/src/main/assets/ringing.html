@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ZenAlarm</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="ringing-body">
+    <main class="ringing-card">
+        <p class="ringing-group" id="ringGroup"></p>
+        <h1 class="ringing-time" id="ringTime">00:00</h1>
+        <p class="ringing-label" id="ringLabel">Alarm</p>
+
+        <section id="challengeSection" class="challenge hidden">
+            <p class="challenge-title">Solve to turn off</p>
+            <p class="challenge-question" id="challengeQuestion"></p>
+            <input type="number" id="challengeAnswer" inputmode="numeric" placeholder="Your answer" />
+            <p id="challengeFeedback" class="feedback"></p>
+            <button type="button" id="submitChallengeBtn" class="btn-primary">Submit</button>
+        </section>
+
+        <div class="ringing-actions">
+            <button type="button" id="snoozeBtn" class="btn-secondary">Snooze</button>
+            <button type="button" id="dismissBtn" class="btn-primary" disabled>Dismiss</button>
+        </div>
+    </main>
+    <script src="ringing.js"></script>
+</body>
+</html>

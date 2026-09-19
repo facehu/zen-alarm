@@ -1,0 +1,21 @@
+*.iml
+.gradle/
+.kotlin/
+/local.properties
+/.idea/
+.DS_Store
+/build
+/app/build
+/.jdk/
+.cxx/
+captures/
+
+# Built application packages
+*.apk
+*.aab
+*.ap_
+*.dex
+
+# Java / tooling
+*.class
+*.hprof

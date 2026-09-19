@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ZenAlarm</string>
+    <string name="alarm_notification_title">Alarm ringing</string>
+    <string name="alarm_channel_name">Alarms</string>
+    <string name="alarm_channel_description">Active alarm notifications</string>
+    <string name="next_alarm_notification_title">Next alarm</string>
+    <string name="next_alarm_channel_name">Next alarm</string>
+    <string name="next_alarm_channel_description">Shows when your next alarm will ring</string>
+    <string name="next_alarm_tomorrow">Tomorrow, %1$s</string>
+    <string name="next_alarm_date_time">%1$s, %2$s</string>
+</resources>
