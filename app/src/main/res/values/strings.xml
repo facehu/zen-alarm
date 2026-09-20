@@ -9,4 +9,114 @@
     <string name="next_alarm_channel_description">Shows when your next alarm will ring</string>
     <string name="next_alarm_tomorrow">Tomorrow, %1$s</string>
     <string name="next_alarm_date_time">%1$s, %2$s</string>
+
+    <string name="default_alarm_label">Alarm</string>
+    <string name="challenge_type_none">None</string>
+    <string name="challenge_type_math">Math</string>
+
+    <string name="permission_feature_notifications">Next-alarm status and lock-screen alerts when an alarm rings</string>
+    <string name="permission_feature_exact_alarms">Reliable alarm scheduling</string>
+    <string name="permission_feature_dnd">Do Not Disturb override for selected groups</string>
+
+    <string name="ui_settings">Settings</string>
+    <string name="ui_new_group">+ New group</string>
+    <string name="ui_group">Group</string>
+    <string name="ui_name">Name</string>
+    <string name="ui_group_enabled">Group enabled</string>
+    <string name="ui_override_dnd">Override Do Not Disturb</string>
+    <string name="ui_wake_challenge">Wake-up challenge</string>
+    <string name="ui_math_difficulty">Math difficulty</string>
+    <string name="ui_snooze_minutes">Snooze (minutes)</string>
+    <string name="ui_volume_ramp_seconds">Volume ramp (seconds)</string>
+    <string name="ui_volume_ramp_hint">0 = full volume immediately. Otherwise fades from silent to 100%.</string>
+    <string name="ui_delete_group">Delete group</string>
+    <string name="ui_cancel">Cancel</string>
+    <string name="ui_save">Save</string>
+    <string name="ui_alarm">Alarm</string>
+    <string name="ui_time">Time</string>
+    <string name="ui_label">Label</string>
+    <string name="ui_label_placeholder">Morning</string>
+    <string name="ui_alarm_enabled">Alarm enabled</string>
+    <string name="ui_repeat">Repeat</string>
+    <string name="ui_repeat_hint">Leave empty for daily (every day).</string>
+    <string name="ui_delete_alarm">Delete alarm</string>
+    <string name="ui_permission">Permission</string>
+    <string name="ui_permission_note">You can tap <b>No thanks</b> — the app still works, but this feature may be limited.</string>
+    <string name="ui_no_thanks">No thanks</string>
+    <string name="ui_continue">Continue</string>
+    <string name="ui_show_next_alarm_notification">Show next alarm in notification shade</string>
+    <string name="ui_show_next_alarm_hint">Keeps a quiet ongoing notification with the time of your next enabled alarm.</string>
+    <string name="ui_done">Done</string>
+    <string name="ui_confirm">Confirm</string>
+    <string name="ui_delete">Delete</string>
+
+    <string name="ui_repeat_daily">Daily</string>
+    <string name="ui_repeat_every_day">Every day</string>
+    <string name="ui_group_meta_math">Math - %1$s</string>
+    <string name="ui_group_meta_no_challenge">No challenge</string>
+    <string name="ui_group_meta_snooze">Snooze %1$dm</string>
+    <string name="ui_group_meta_dnd_override">DND override</string>
+    <string name="ui_group_meta_vol_ramp">Vol ramp %1$ds</string>
+    <string name="ui_tree_empty_groups">No groups yet. Tap \"New group\" below.</string>
+    <string name="ui_tree_empty_alarms">No alarms in this group.</string>
+    <string name="ui_add_alarm">+ Add alarm</string>
+    <string name="ui_toggle_alarm">Toggle alarm</string>
+    <string name="ui_toggle_collapse">Expand or collapse</string>
+    <string name="ui_toggle_group">Toggle group</string>
+
+    <string name="ui_perm_notifications">Notifications</string>
+    <string name="ui_perm_exact_alarms">Exact alarms</string>
+    <string name="ui_perm_dnd">Do Not Disturb access</string>
+    <string name="ui_perm_allow">Allow %1$s</string>
+    <string name="ui_perm_banner">%1$s — %2$s.</string>
+
+    <string name="ui_perm_title_notifications">Allow notifications?</string>
+    <string name="ui_perm_title_exact_alarms">Allow exact alarms?</string>
+    <string name="ui_perm_title_dnd">Allow Do Not Disturb access?</string>
+    <string name="ui_perm_body_notifications">Notifications show your next alarm in the shade and the alarm on the lock screen when it rings.</string>
+    <string name="ui_perm_body_exact_alarms">Exact alarms let the app ring at the precise time you set, even when the phone is idle.</string>
+    <string name="ui_perm_body_dnd">DND access lets groups marked \"Override Do Not Disturb\" ring through silent mode.</string>
+    <string name="ui_perm_without_feature">Without it, %1$s may not work reliably.</string>
+    <string name="ui_settings_permissions">Permissions &amp; notifications</string>
+    <string name="ui_perm_status_granted">Allowed</string>
+    <string name="ui_perm_status_needed">Setup needed</string>
+    <string name="ui_perm_setup">Set up</string>
+    <string name="ui_open_notification_settings">Notification settings</string>
+
+    <string name="ui_edit_group">Edit group</string>
+    <string name="ui_new_group_title">New group</string>
+    <string name="ui_edit_alarm">Edit alarm</string>
+    <string name="ui_new_alarm">New alarm</string>
+    <string name="ui_delete_group_title">Delete group?</string>
+    <string name="ui_delete_group_message">Delete \"%1$s\" and all alarms inside it? This cannot be undone.</string>
+    <string name="ui_delete_alarm_title">Delete alarm?</string>
+    <string name="ui_delete_alarm_message">Delete \"%1$s\"? This cannot be undone.</string>
+
+    <string name="ui_ringing_solve">Solve to turn off</string>
+    <string name="ui_ringing_answer_placeholder">Your answer</string>
+    <string name="ui_ringing_submit">Submit</string>
+    <string name="ui_ringing_snooze">Snooze</string>
+    <string name="ui_ringing_snooze_minutes">Snooze (%1$dm)</string>
+    <string name="ui_ringing_dismiss">Dismiss</string>
+    <string name="ui_ringing_correct">Correct! You can dismiss the alarm.</string>
+    <string name="ui_ringing_wrong">Wrong answer — try again.</string>
+
+    <string-array name="difficulty_labels">
+        <item></item>
+        <item>Easy</item>
+        <item>Light</item>
+        <item>Normal</item>
+        <item>Hard</item>
+        <item>Expert</item>
+    </string-array>
+
+    <string-array name="day_labels">
+        <item>Sun</item>
+        <item>Mon</item>
+        <item>Tue</item>
+        <item>Wed</item>
+        <item>Thu</item>
+        <item>Fri</item>
+        <item>Sat</item>
+    </string-array>
 </resources>

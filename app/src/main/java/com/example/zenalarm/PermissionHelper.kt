@@ -10,6 +10,7 @@ import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import androidx.core.content.ContextCompat
+import com.example.zenalarm.R
 import com.google.gson.Gson
 
 class PermissionHelper(private val context: Context) {
@@ -22,19 +23,19 @@ class PermissionHelper(private val context: Context) {
                     granted = hasNotificationPermission(),
                     required = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU,
                     canRequestInApp = true,
-                    feature = "Next-alarm status and lock-screen alerts when an alarm rings",
+                    feature = context.getString(R.string.permission_feature_notifications),
                 ),
                 exactAlarms = permissionEntry(
                     granted = canScheduleExactAlarms(),
                     required = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S,
                     canRequestInApp = false,
-                    feature = "Reliable alarm scheduling",
+                    feature = context.getString(R.string.permission_feature_exact_alarms),
                 ),
                 dnd = permissionEntry(
                     granted = hasDndAccess(),
                     required = false,
                     canRequestInApp = false,
-                    feature = "Do Not Disturb override for selected groups",
+                    feature = context.getString(R.string.permission_feature_dnd),
                 ),
             ),
         )
@@ -68,6 +69,17 @@ class PermissionHelper(private val context: Context) {
 
     fun createDndSettingsIntent(): Intent {
         return Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS)
+    }
+
+    fun createAppNotificationSettingsIntent(): Intent {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            return Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
+                putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
+            }
+        }
+        return Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+            data = Uri.parse("package:${context.packageName}")
+        }
     }
 
     private fun permissionEntry(

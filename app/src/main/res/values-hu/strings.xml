@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ZenAlarm</string>
+    <string name="alarm_notification_title">Ébresztő szól</string>
+    <string name="alarm_channel_name">Ébresztők</string>
+    <string name="alarm_channel_description">Aktív ébresztő értesítések</string>
+    <string name="next_alarm_notification_title">Következő ébresztő</string>
+    <string name="next_alarm_channel_name">Következő ébresztő</string>
+    <string name="next_alarm_channel_description">Megmutatja, mikor szól a következő ébresztő</string>
+    <string name="next_alarm_tomorrow">Holnap, %1$s</string>
+    <string name="next_alarm_date_time">%1$s, %2$s</string>
+
+    <string name="default_alarm_label">Ébresztő</string>
+    <string name="challenge_type_none">Nincs</string>
+    <string name="challenge_type_math">Matek</string>
+
+    <string name="permission_feature_notifications">Következő ébresztő állapota és zárolási képernyős riasztás csengéskor</string>
+    <string name="permission_feature_exact_alarms">Megbízható ébresztő ütemezés</string>
+    <string name="permission_feature_dnd">Ne zavarj felülírása a kijelölt csoportokhoz</string>
+
+    <string name="ui_settings">Beállítások</string>
+    <string name="ui_new_group">+ Új csoport</string>
+    <string name="ui_group">Csoport</string>
+    <string name="ui_name">Név</string>
+    <string name="ui_group_enabled">Csoport bekapcsolva</string>
+    <string name="ui_override_dnd">Ne zavarj felülírása</string>
+    <string name="ui_wake_challenge">Ébresztő feladat</string>
+    <string name="ui_math_difficulty">Matek nehézség</string>
+    <string name="ui_snooze_minutes">Szundi (perc)</string>
+    <string name="ui_volume_ramp_seconds">Hangerő fokozás (másodperc)</string>
+    <string name="ui_volume_ramp_hint">0 = azonnali teljes hangerő. Egyébként csendesről 100%-ra fokozódik.</string>
+    <string name="ui_delete_group">Csoport törlése</string>
+    <string name="ui_cancel">Mégse</string>
+    <string name="ui_save">Mentés</string>
+    <string name="ui_alarm">Ébresztő</string>
+    <string name="ui_time">Idő</string>
+    <string name="ui_label">Címke</string>
+    <string name="ui_label_placeholder">Reggel</string>
+    <string name="ui_alarm_enabled">Ébresztő bekapcsolva</string>
+    <string name="ui_repeat">Ismétlés</string>
+    <string name="ui_repeat_hint">Üresen hagyva minden nap (napi).</string>
+    <string name="ui_delete_alarm">Ébresztő törlése</string>
+    <string name="ui_permission">Engedély</string>
+    <string name="ui_permission_note">Megnyomhatod a <b>Nem, köszönöm</b> gombot — az alkalmazás így is működik, de ez a funkció korlátozott lehet.</string>
+    <string name="ui_no_thanks">Nem, köszönöm</string>
+    <string name="ui_continue">Tovább</string>
+    <string name="ui_show_next_alarm_notification">Következő ébresztő az értesítési sávban</string>
+    <string name="ui_show_next_alarm_hint">Csendes, folyamatos értesítés a következő bekapcsolt ébresztő idejével.</string>
+    <string name="ui_done">Kész</string>
+    <string name="ui_confirm">Megerősítés</string>
+    <string name="ui_delete">Törlés</string>
+
+    <string name="ui_repeat_daily">Napi</string>
+    <string name="ui_repeat_every_day">Minden nap</string>
+    <string name="ui_group_meta_math">Matek - %1$s</string>
+    <string name="ui_group_meta_no_challenge">Nincs feladat</string>
+    <string name="ui_group_meta_snooze">Szundi %1$d perc</string>
+    <string name="ui_group_meta_dnd_override">NZ felülírás</string>
+    <string name="ui_group_meta_vol_ramp">Hangerő %1$d s</string>
+    <string name="ui_tree_empty_groups">Még nincs csoport. Nyomd meg az „Új csoport” gombot lent.</string>
+    <string name="ui_tree_empty_alarms">Nincs ébresztő ebben a csoportban.</string>
+    <string name="ui_add_alarm">+ Ébresztő hozzáadása</string>
+    <string name="ui_toggle_alarm">Ébresztő kapcsolása</string>
+    <string name="ui_toggle_collapse">Kinyitás vagy összecsukás</string>
+    <string name="ui_toggle_group">Csoport kapcsolása</string>
+
+    <string name="ui_perm_notifications">Értesítések</string>
+    <string name="ui_perm_exact_alarms">Pontos ébresztők</string>
+    <string name="ui_perm_dnd">Ne zavarj hozzáférés</string>
+    <string name="ui_perm_allow">%1$s engedélyezése</string>
+    <string name="ui_perm_banner">%1$s — %2$s.</string>
+
+    <string name="ui_perm_title_notifications">Engedélyezed az értesítéseket?</string>
+    <string name="ui_perm_title_exact_alarms">Engedélyezed a pontos ébresztőket?</string>
+    <string name="ui_perm_title_dnd">Engedélyezed a Ne zavarj hozzáférést?</string>
+    <string name="ui_perm_body_notifications">Az értesítések a következő ébresztőt mutatják a sávban, és csengéskor a zárolási képernyőn.</string>
+    <string name="ui_perm_body_exact_alarms">A pontos ébresztők lehetővé teszik, hogy a beállított időpontban csörögjön, még tétlen telefonon is.</string>
+    <string name="ui_perm_body_dnd">A NZ hozzáférés lehetővé teszi, hogy a „Ne zavarj felülírása” csoportok csendes módban is csörögjön.</string>
+    <string name="ui_perm_without_feature">Enélkül a(z) %1$s nem biztos, hogy megbízhatóan működik.</string>
+    <string name="ui_settings_permissions">Engedélyek és értesítések</string>
+    <string name="ui_perm_status_granted">Engedélyezve</string>
+    <string name="ui_perm_status_needed">Beállítás szükséges</string>
+    <string name="ui_perm_setup">Beállítás</string>
+    <string name="ui_open_notification_settings">Értesítési beállítások</string>
+
+    <string name="ui_edit_group">Csoport szerkesztése</string>
+    <string name="ui_new_group_title">Új csoport</string>
+    <string name="ui_edit_alarm">Ébresztő szerkesztése</string>
+    <string name="ui_new_alarm">Új ébresztő</string>
+    <string name="ui_delete_group_title">Törlöd a csoportot?</string>
+    <string name="ui_delete_group_message">Törlöd a(z) „%1$s” csoportot és az összes ébresztőjét? Ez nem vonható vissza.</string>
+    <string name="ui_delete_alarm_title">Törlöd az ébresztőt?</string>
+    <string name="ui_delete_alarm_message">Törlöd a(z) „%1$s” ébresztőt? Ez nem vonható vissza.</string>
+
+    <string name="ui_ringing_solve">Oldd meg a kikapcsoláshoz</string>
+    <string name="ui_ringing_answer_placeholder">A válaszod</string>
+    <string name="ui_ringing_submit">Beküldés</string>
+    <string name="ui_ringing_snooze">Szundi</string>
+    <string name="ui_ringing_snooze_minutes">Szundi (%1$d perc)</string>
+    <string name="ui_ringing_dismiss">Kikapcsolás</string>
+    <string name="ui_ringing_correct">Helyes! Kikapcsolhatod az ébresztőt.</string>
+    <string name="ui_ringing_wrong">Hibás válasz — próbáld újra.</string>
+
+    <string-array name="difficulty_labels">
+        <item></item>
+        <item>Könnyű</item>
+        <item>Könnyed</item>
+        <item>Normál</item>
+        <item>Nehéz</item>
+        <item>Szakértő</item>
+    </string-array>
+
+    <string-array name="day_labels">
+        <item>V</item>
+        <item>H</item>
+        <item>K</item>
+        <item>Sze</item>
+        <item>Cs</item>
+        <item>P</item>
+        <item>Szo</item>
+    </string-array>
+</resources>

@@ -22,7 +22,9 @@ let challengeTypes = [];
 const expandedGroups = new Set();
 let confirmCallback = null;
 
-const DIFFICULTY_LABELS = ["", "Easy", "Light", "Normal", "Hard", "Expert"];
+function difficultyLabels() {
+    return i18n.difficulty_labels || ["", "Easy", "Light", "Normal", "Hard", "Expert"];
+}
 
 const alarmTree = document.getElementById("alarmTree");
 const permissionBanner = document.getElementById("permissionBanner");
@@ -31,8 +33,6 @@ const alarmDialog = document.getElementById("alarmDialog");
 const permissionDialog = document.getElementById("permissionDialog");
 const confirmDialog = document.getElementById("confirmDialog");
 const settingsDialog = document.getElementById("settingsDialog");
-
-const DAY_LABELS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 function pad2(n) {
     return String(n).padStart(2, "0");
@@ -43,9 +43,11 @@ function formatTime(hour, minute) {
 }
 
 function repeatLabel(repeatDays) {
-    if (!repeatDays) return "Daily";
-    const days = DAY_LABELS.filter((_, i) => repeatDays & (1 << i));
-    if (days.length === 7) return "Every day";
+    if (!repeatDays) return t("ui_repeat_daily");
+    const days = dayOrderCalendarDays()
+        .filter((calendarDay) => repeatDays & calendarDayToBit(calendarDay))
+        .map((calendarDay) => labelForCalendarDay(calendarDay));
+    if (days.length === 7) return t("ui_repeat_every_day");
     return days.join(", ");
 }
 
@@ -125,6 +127,7 @@ window.onPermissionsChanged = function (data) {
         permissions = data;
     }
     renderPermissionBanner();
+    renderSettingsPermissions();
 };
 
 function loadChallengeTypes() {
@@ -138,12 +141,17 @@ function loadChallengeTypes() {
 function groupMeta(group) {
     const parts = [
         group.challengeType === "math"
-            ? `Math - ${DIFFICULTY_LABELS[group.challengeDifficulty || 3]}`
-            : "No challenge",
-        `Snooze ${group.snoozeMinutes}m`,
+            ? tf(
+                  "ui_group_meta_math",
+                  difficultyLabels()[group.challengeDifficulty || 3] || difficultyLabels()[3],
+              )
+            : t("ui_group_meta_no_challenge"),
+        tf("ui_group_meta_snooze", group.snoozeMinutes),
     ];
-    if (group.overrideDnd) parts.push("DND override");
-    if (group.volumeRampSeconds > 0) parts.push(`Vol ramp ${group.volumeRampSeconds}s`);
+    if (group.overrideDnd) parts.push(t("ui_group_meta_dnd_override"));
+    if (group.volumeRampSeconds > 0) {
+        parts.push(tf("ui_group_meta_vol_ramp", group.volumeRampSeconds));
+    }
     return parts.join(" - ");
 }
 
@@ -153,7 +161,7 @@ function isGroupExpanded(groupId) {
 
 function renderTree() {
     if (!state.groups.length) {
-        alarmTree.innerHTML = '<p class="tree-empty">No groups yet. Tap "New group" below.</p>';
+        alarmTree.innerHTML = `<p class="tree-empty">${escapeHtml(t("ui_tree_empty_groups"))}</p>`;
         return;
     }
 
@@ -179,29 +187,29 @@ function renderTree() {
                                 <div class="tree-alarm-main">
                                     <div class="tree-alarm-time">${formatTime(alarm.hour, alarm.minute)}</div>
                                     <div class="tree-alarm-info">
-                                        <div class="tree-alarm-label">${escapeHtml(alarm.label || "Alarm")}</div>
+                                        <div class="tree-alarm-label">${escapeHtml(alarm.label || t("default_alarm_label"))}</div>
                                         <div class="tree-alarm-meta">${repeatLabel(alarm.repeatDays)}</div>
                                     </div>
                                 </div>
-                                <button type="button" class="toggle toggle-sm ${alarm.enabled ? "on" : ""}" data-action="toggle-alarm" aria-label="Toggle alarm"></button>
+                                <button type="button" class="toggle toggle-sm ${alarm.enabled ? "on" : ""}" data-action="toggle-alarm" aria-label="${escapeHtml(t("ui_toggle_alarm"))}"></button>
                             </div>`;
                       })
                       .join("")
-                : '<p class="tree-empty">No alarms in this group.</p>';
+                : `<p class="tree-empty">${escapeHtml(t("ui_tree_empty_alarms"))}</p>`;
 
             return `
                 <section class="tree-group" data-group-id="${group.id}">
                     <div class="tree-group-head">
-                        <button type="button" class="tree-chevron" data-action="toggle-collapse" aria-label="Expand or collapse">${expanded ? "&#9660;" : "&#9654;"}</button>
+                        <button type="button" class="tree-chevron" data-action="toggle-collapse" aria-label="${escapeHtml(t("ui_toggle_collapse"))}">${expanded ? "&#9660;" : "&#9654;"}</button>
                         <div class="tree-group-info">
                             <div class="tree-group-name">${escapeHtml(group.name)}</div>
                             <div class="tree-group-meta">${groupMeta(group)}</div>
                         </div>
-                        <button type="button" class="toggle toggle-sm ${group.enabled ? "on" : ""}" data-action="toggle-group" aria-label="Toggle group"></button>
+                        <button type="button" class="toggle toggle-sm ${group.enabled ? "on" : ""}" data-action="toggle-group" aria-label="${escapeHtml(t("ui_toggle_group"))}"></button>
                     </div>
                     <div class="tree-children ${expanded ? "" : "collapsed"}">
                         ${alarmRows}
-                        <button type="button" class="tree-add-alarm" data-action="add-alarm">+ Add alarm</button>
+                        <button type="button" class="tree-add-alarm" data-action="add-alarm">${escapeHtml(t("ui_add_alarm"))}</button>
                     </div>
                 </section>`;
         })
@@ -216,9 +224,9 @@ function renderPermissionBanner() {
     }
 
     const items = [
-        { key: "notifications", label: "Notifications", kind: "notifications" },
-        { key: "exactAlarms", label: "Exact alarms", kind: "exactAlarms" },
-        { key: "dnd", label: "Do Not Disturb access", kind: "dnd" },
+        { key: "notifications", label: t("ui_perm_notifications"), kind: "notifications" },
+        { key: "exactAlarms", label: t("ui_perm_exact_alarms"), kind: "exactAlarms" },
+        { key: "dnd", label: t("ui_perm_dnd"), kind: "dnd" },
     ];
 
     const missing = items.filter(({ key }) => {
@@ -238,8 +246,8 @@ function renderPermissionBanner() {
             const entry = permissions[key];
             return `
                 <div class="perm-card">
-                    <p><strong>${label}</strong> - ${entry.feature}.</p>
-                    <button type="button" class="btn-primary" data-perm-kind="${kind}">Allow ${label.toLowerCase()}</button>
+                    <p>${escapeHtml(tf("ui_perm_banner", label, entry.feature))}</p>
+                    <button type="button" class="btn-primary" data-perm-kind="${kind}">${escapeHtml(tf("ui_perm_allow", label))}</button>
                 </div>`;
         })
         .join("");
@@ -252,23 +260,20 @@ function showPermissionDialog(kind) {
 
     const entry = permissions[kind];
     const titles = {
-        notifications: "Allow notifications?",
-        exactAlarms: "Allow exact alarms?",
-        dnd: "Allow Do Not Disturb access?",
+        notifications: t("ui_perm_title_notifications"),
+        exactAlarms: t("ui_perm_title_exact_alarms"),
+        dnd: t("ui_perm_title_dnd"),
     };
     const bodies = {
-        notifications:
-            "Notifications show your next alarm in the shade and the alarm on the lock screen when it rings.",
-        exactAlarms:
-            "Exact alarms let the app ring at the precise time you set, even when the phone is idle.",
-        dnd:
-            'DND access lets groups marked "Override Do Not Disturb" ring through silent mode.',
+        notifications: t("ui_perm_body_notifications"),
+        exactAlarms: t("ui_perm_body_exact_alarms"),
+        dnd: t("ui_perm_body_dnd"),
     };
 
     pendingPermissionKind = kind;
     document.getElementById("permissionTitle").textContent = titles[kind];
     document.getElementById("permissionBody").textContent =
-        `${bodies[kind]} Without it, ${entry.feature.toLowerCase()} may not work reliably.`;
+        `${bodies[kind]} ${tf("ui_perm_without_feature", entry.feature)}`;
     openOverlay(permissionDialog);
 }
 
@@ -278,12 +283,15 @@ function updateDifficultyUi() {
     block.classList.toggle("hidden", challenge !== "math");
 
     const value = Number(document.getElementById("groupDifficulty").value);
+    const labels = difficultyLabels();
     document.getElementById("groupDifficultyLabel").textContent =
-        DIFFICULTY_LABELS[value] || "Normal";
+        labels[value] || labels[3] || "Normal";
 }
 
 function openGroupDialog(group) {
-    document.getElementById("groupDialogTitle").textContent = group ? "Edit group" : "New group";
+    document.getElementById("groupDialogTitle").textContent = group
+        ? t("ui_edit_group")
+        : t("ui_new_group_title");
     document.getElementById("deleteGroupBtn").classList.toggle("hidden", !group);
     document.getElementById("groupId").value = group?.id || 0;
     document.getElementById("groupName").value = group?.name || "";
@@ -299,7 +307,9 @@ function openGroupDialog(group) {
 }
 
 function openAlarmDialog(alarm, groupId) {
-    document.getElementById("alarmDialogTitle").textContent = alarm ? "Edit alarm" : "New alarm";
+    document.getElementById("alarmDialogTitle").textContent = alarm
+        ? t("ui_edit_alarm")
+        : t("ui_new_alarm");
     document.getElementById("deleteAlarmBtn").classList.toggle("hidden", !alarm);
     document.getElementById("alarmId").value = alarm?.id || 0;
     document.getElementById("alarmGroupId").value = groupId || alarm?.groupId || state.groups[0]?.id || 0;
@@ -396,8 +406,8 @@ document.getElementById("deleteGroupBtn").addEventListener("click", () => {
     const group = readGroupForm();
     if (!group.id) return;
     showConfirm(
-        "Delete group?",
-        `Delete "${group.name}" and all alarms inside it? This cannot be undone.`,
+        t("ui_delete_group_title"),
+        tf("ui_delete_group_message", group.name),
         deleteGroupConfirmed,
     );
 });
@@ -405,10 +415,10 @@ document.getElementById("deleteGroupBtn").addEventListener("click", () => {
 document.getElementById("deleteAlarmBtn").addEventListener("click", () => {
     const alarm = readAlarmForm();
     if (!alarm.id) return;
-    const label = alarm.label || "Alarm";
+    const label = alarm.label || t("default_alarm_label");
     showConfirm(
-        "Delete alarm?",
-        `Delete "${label}"? This cannot be undone.`,
+        t("ui_delete_alarm_title"),
+        tf("ui_delete_alarm_message", label),
         deleteAlarmConfirmed,
     );
 });
@@ -436,14 +446,71 @@ document.getElementById("groupDifficulty").addEventListener("input", updateDiffi
 document.getElementById("groupForm").addEventListener("submit", (e) => e.preventDefault());
 document.getElementById("alarmForm").addEventListener("submit", (e) => e.preventDefault());
 
+const SETTINGS_PERMISSION_ITEMS = [
+    { key: "notifications", labelKey: "ui_perm_notifications", kind: "notifications" },
+    { key: "exactAlarms", labelKey: "ui_perm_exact_alarms", kind: "exactAlarms" },
+    { key: "dnd", labelKey: "ui_perm_dnd", kind: "dnd" },
+];
+
+function renderSettingsPermissions() {
+    const list = document.getElementById("settingsPermissionsList");
+    if (!list) return;
+
+    if (!permissions) {
+        list.innerHTML = "";
+        return;
+    }
+
+    list.innerHTML = SETTINGS_PERMISSION_ITEMS
+        .map(({ key, labelKey, kind }) => {
+            const entry = permissions[key];
+            if (!entry) return "";
+            const name = t(labelKey);
+            const granted = entry.granted;
+            const status = granted ? t("ui_perm_status_granted") : t("ui_perm_status_needed");
+            let action = "";
+            if (kind === "notifications") {
+                const label = granted
+                    ? t("ui_open_notification_settings")
+                    : t("ui_perm_setup");
+                action = `<button type="button" class="btn-text settings-perm-action" data-settings-perm="${kind}">${escapeHtml(label)}</button>`;
+            } else if (!granted) {
+                action = `<button type="button" class="btn-text settings-perm-action" data-settings-perm="${kind}">${escapeHtml(t("ui_perm_setup"))}</button>`;
+            }
+            return `
+                <div class="settings-perm-row">
+                    <div class="settings-perm-info">
+                        <div class="settings-perm-name">${escapeHtml(name)}</div>
+                        <div class="settings-perm-status">${escapeHtml(status)}</div>
+                    </div>
+                    ${action}
+                </div>`;
+        })
+        .join("");
+}
+
 function openSettingsDialog() {
     document.getElementById("settingShowNextAlarm").checked =
         appSettings.showNextAlarmNotification !== false;
+    renderSettingsPermissions();
     openOverlay(settingsDialog);
 }
 
 document.getElementById("settingsBtn").addEventListener("click", openSettingsDialog);
 document.getElementById("closeSettingsBtn").addEventListener("click", () => closeOverlay(settingsDialog));
+
+document.getElementById("settingsPermissionsList")?.addEventListener("click", (e) => {
+    const btn = e.target.closest("[data-settings-perm]");
+    if (!btn) return;
+    const kind = btn.dataset.settingsPerm;
+    if (kind === "notifications" && permissions?.notifications?.granted) {
+        if (typeof AndroidBridge !== "undefined") {
+            AndroidBridge.openNotificationSettings();
+        }
+        return;
+    }
+    showPermissionDialog(kind);
+});
 
 document.getElementById("settingShowNextAlarm").addEventListener("change", (e) => {
     if (typeof AndroidBridge === "undefined") return;
@@ -532,6 +599,8 @@ document.getElementById("permissionYes").addEventListener("click", () => {
 });
 
 document.addEventListener("DOMContentLoaded", () => {
+    loadI18nFromBridge();
+    applyMainPageI18n();
     loadChallengeTypes();
     if (typeof AndroidBridge !== "undefined") {
         window.onStateChanged(AndroidBridge.getState());

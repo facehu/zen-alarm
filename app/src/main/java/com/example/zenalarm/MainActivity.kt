@@ -90,6 +90,10 @@ class MainActivity : AppCompatActivity() {
         startActivity(permissionHelper.createDndSettingsIntent())
     }
 
+    fun openNotificationSettingsFromJs() {
+        startActivity(permissionHelper.createAppNotificationSettingsIntent())
+    }
+
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,

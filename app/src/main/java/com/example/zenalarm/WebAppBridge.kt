@@ -58,6 +58,11 @@ class WebAppBridge(
     }
 
     @JavascriptInterface
+    fun openNotificationSettings() {
+        runOnUiThread { activity.openNotificationSettingsFromJs() }
+    }
+
+    @JavascriptInterface
     fun saveGroup(json: String): String = runBlocking {
         val group = gson.fromJson(json, AlarmGroup::class.java)
         val id = repository.saveGroup(group)
@@ -104,11 +109,20 @@ class WebAppBridge(
     fun getChallengeTypes(): String {
         return gson.toJson(
             listOf(
-                ChallengeTypeOption(AlarmGroup.CHALLENGE_NONE, "None"),
-                ChallengeTypeOption(AlarmGroup.CHALLENGE_MATH, "Math"),
+                ChallengeTypeOption(
+                    AlarmGroup.CHALLENGE_NONE,
+                    activity.getString(R.string.challenge_type_none),
+                ),
+                ChallengeTypeOption(
+                    AlarmGroup.CHALLENGE_MATH,
+                    activity.getString(R.string.challenge_type_math),
+                ),
             ),
         )
     }
+
+    @JavascriptInterface
+    fun getUiStrings(): String = UiStrings.toJson(activity)
 
     fun notifyStateChanged() {
         pushJsonToJs("onStateChanged", getState())

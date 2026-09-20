@@ -12,7 +12,11 @@ data class UpcomingAlarm(
 )
 
 object NextAlarmFinder {
-    suspend fun findNext(dao: AlarmDao, settings: AppSettings): UpcomingAlarm? {
+    suspend fun findNext(
+        dao: AlarmDao,
+        settings: AppSettings,
+        defaultAlarmLabel: String,
+    ): UpcomingAlarm? {
         val now = System.currentTimeMillis()
         var best: UpcomingAlarm? = null
 
@@ -25,7 +29,7 @@ object NextAlarmFinder {
                 best = UpcomingAlarm(
                     alarm = alarm,
                     triggerAtMillis = snoozeAt,
-                    label = labelFor(alarm, group),
+                    label = labelFor(alarm, group, defaultAlarmLabel),
                 )
             }
         }
@@ -37,7 +41,7 @@ object NextAlarmFinder {
             val candidate = UpcomingAlarm(
                 alarm = alarm,
                 triggerAtMillis = trigger,
-                label = labelFor(alarm, group),
+                label = labelFor(alarm, group, defaultAlarmLabel),
             )
             if (best == null || candidate.triggerAtMillis < best.triggerAtMillis) {
                 best = candidate
@@ -47,11 +51,11 @@ object NextAlarmFinder {
         return best
     }
 
-    private fun labelFor(alarm: Alarm, group: AlarmGroup): String {
+    private fun labelFor(alarm: Alarm, group: AlarmGroup, defaultAlarmLabel: String): String {
         val trimmedLabel = alarm.label.trim()
         if (trimmedLabel.isNotEmpty()) return trimmedLabel
         val trimmedGroup = group.name.trim()
         if (trimmedGroup.isNotEmpty()) return trimmedGroup
-        return "Alarm"
+        return defaultAlarmLabel
     }
 }

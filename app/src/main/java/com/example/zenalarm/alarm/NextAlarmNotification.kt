@@ -35,7 +35,11 @@ object NextAlarmNotification {
 
         val upcoming = runBlocking {
             val dao = AlarmDatabase.getInstance(appContext).alarmDao()
-            NextAlarmFinder.findNext(dao, settings)
+            NextAlarmFinder.findNext(
+                dao,
+                settings,
+                appContext.getString(R.string.default_alarm_label),
+            )
         }
 
         if (upcoming == null) {

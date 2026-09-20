@@ -91,8 +91,11 @@ class RingingBridge(
         if (trimmedLabel.isNotEmpty()) return trimmedLabel
         val trimmedGroup = groupName?.trim().orEmpty()
         if (trimmedGroup.isNotEmpty()) return trimmedGroup
-        return "Alarm"
+        return activity.getString(R.string.default_alarm_label)
     }
+
+    @JavascriptInterface
+    fun getUiStrings(): String = UiStrings.toJson(activity)
 
     private data class RingingState(
         val label: String,

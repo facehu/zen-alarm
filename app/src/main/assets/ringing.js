@@ -35,9 +35,9 @@ function renderRingingState() {
         ringLabel.textContent = alarmLabel;
     } else {
         ringGroup.classList.add("hidden");
-        ringLabel.textContent = groupName || alarmLabel || "Alarm";
+        ringLabel.textContent = groupName || alarmLabel || t("default_alarm_label");
     }
-    snoozeBtn.textContent = `Snooze (${ringingState.snoozeMinutes}m)`;
+    snoozeBtn.textContent = tf("ui_ringing_snooze_minutes", ringingState.snoozeMinutes);
 
     if (ringingState.challengeType === "math") {
         challengeSection.classList.remove("hidden");
@@ -53,8 +53,8 @@ submitChallengeBtn.addEventListener("click", () => {
     const result = JSON.parse(AndroidBridge.submitChallengeAnswer(challengeAnswer.value));
     challengeFeedback.className = "feedback " + (result.correct ? "ok" : "error");
     challengeFeedback.textContent = result.correct
-        ? "Correct! You can dismiss the alarm."
-        : "Wrong answer — try again.";
+        ? t("ui_ringing_correct")
+        : t("ui_ringing_wrong");
     if (result.canDismiss) {
         dismissBtn.disabled = false;
         challengeAnswer.disabled = true;
@@ -77,6 +77,8 @@ challengeAnswer.addEventListener("keydown", (e) => {
 });
 
 document.addEventListener("DOMContentLoaded", () => {
+    loadI18nFromBridge();
+    applyMainPageI18n();
     if (typeof AndroidBridge !== "undefined") {
         window.onRingingState(AndroidBridge.getRingingState());
     }
