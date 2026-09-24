@@ -1,3 +1,6 @@
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -8,12 +11,18 @@ android {
     namespace = "com.example.zenalarm"
     compileSdk = 35
 
+    buildFeatures {
+        buildConfig = true
+    }
+
     defaultConfig {
         applicationId = "com.example.zenalarm"
         minSdk = 21
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
+        val buildTimeIso = ZonedDateTime.now().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
+        buildConfigField("String", "BUILD_TIME_ISO", "\"$buildTimeIso\"")
     }
 
     buildTypes {

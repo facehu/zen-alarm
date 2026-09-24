@@ -2,6 +2,7 @@
 <resources>
     <string name="app_name">ZenAlarm</string>
     <string name="alarm_notification_title">Ébresztő szól</string>
+    <string name="alarm_notification_dismiss">Kikapcsolás</string>
     <string name="alarm_channel_name">Ébresztők</string>
     <string name="alarm_channel_description">Aktív ébresztő értesítések</string>
     <string name="next_alarm_notification_title">Következő ébresztő</string>
@@ -27,6 +28,10 @@
     <string name="ui_wake_challenge">Ébresztő feladat</string>
     <string name="ui_math_difficulty">Matek nehézség</string>
     <string name="ui_snooze_minutes">Szundi (perc)</string>
+    <string name="ui_group_alarm_volume">Rendszer hangerő felülírása</string>
+    <string name="ui_group_alarm_volume_system">Rendszer</string>
+    <string name="ui_group_alarm_volume_percent">%1$d%%</string>
+    <string name="ui_group_alarm_volume_hint">0 = a telefon ébresztő hangereje. 1–100 a csengés alatt felülírja a rendszer ébresztő csatornáját ebben a csoportban.</string>
     <string name="ui_volume_ramp_seconds">Hangerő fokozás (másodperc)</string>
     <string name="ui_volume_ramp_hint">0 = azonnali teljes hangerő. Egyébként csendesről 100%-ra fokozódik.</string>
     <string name="ui_delete_group">Csoport törlése</string>
@@ -46,6 +51,8 @@
     <string name="ui_continue">Tovább</string>
     <string name="ui_show_next_alarm_notification">Következő ébresztő az értesítési sávban</string>
     <string name="ui_show_next_alarm_hint">Csendes, folyamatos értesítés a következő bekapcsolt ébresztő idejével.</string>
+    <string name="ui_settings_version">Verzió</string>
+    <string name="ui_settings_build_time">Építve</string>
     <string name="ui_done">Kész</string>
     <string name="ui_confirm">Megerősítés</string>
     <string name="ui_delete">Törlés</string>
@@ -56,6 +63,7 @@
     <string name="ui_group_meta_no_challenge">Nincs feladat</string>
     <string name="ui_group_meta_snooze">Szundi %1$d perc</string>
     <string name="ui_group_meta_dnd_override">NZ felülírás</string>
+    <string name="ui_group_meta_alarm_volume">Hangerő %1$d%%</string>
     <string name="ui_group_meta_vol_ramp">Hangerő %1$d s</string>
     <string name="ui_tree_empty_groups">Még nincs csoport. Nyomd meg az „Új csoport” gombot lent.</string>
     <string name="ui_tree_empty_alarms">Nincs ébresztő ebben a csoportban.</string>

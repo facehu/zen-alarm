@@ -53,6 +53,13 @@
                     <input type="number" id="groupSnooze" min="1" max="60" value="9" />
                 </label>
 
+                <div class="field">
+                    <span id="labelGroupAlarmVolume">Override system volume</span>
+                    <input type="range" id="groupAlarmVolume" min="0" max="100" value="0" step="1" />
+                    <output id="groupAlarmVolumeLabel" for="groupAlarmVolume">System</output>
+                    <p id="groupAlarmVolumeHint" class="hint">0 = use the phone alarm volume. 1–100 overrides system alarm volume for this group while ringing.</p>
+                </div>
+
                 <label class="field"><span id="labelGroupVolumeRamp">Volume ramp (seconds)</span>
                     <input type="number" id="groupVolumeRamp" min="0" max="300" value="0" />
                     <p id="groupVolumeRampHint" class="hint">0 = full volume immediately. Otherwise fades from silent to 100%.</p>
@@ -136,6 +143,16 @@
                 <input type="checkbox" id="settingShowNextAlarm" checked />
             </label>
             <p id="settingShowNextAlarmHint" class="hint">Keeps a quiet ongoing notification with the time of your next enabled alarm.</p>
+            <div id="settingsAbout" class="settings-about">
+                <div class="settings-about-row">
+                    <span id="labelSettingsVersion">Version</span>
+                    <span id="settingsVersionValue">—</span>
+                </div>
+                <div class="settings-about-row">
+                    <span id="labelSettingsBuildTime">Built</span>
+                    <span id="settingsBuildTimeValue">—</span>
+                </div>
+            </div>
             <div class="dialog-actions">
                 <span class="dialog-spacer"></span>
                 <button type="button" id="closeSettingsBtn" class="btn-primary">Done</button>

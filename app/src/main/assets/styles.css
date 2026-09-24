@@ -155,6 +155,25 @@ body {
     white-space: nowrap;
 }
 
+.settings-about {
+    margin-top: 1.25rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.85rem;
+    opacity: 0.8;
+}
+
+.settings-about-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.35rem;
+}
+
+.settings-about-row:last-child {
+    margin-bottom: 0;
+}
+
 /* Tree */
 .tree {
     display: flex;

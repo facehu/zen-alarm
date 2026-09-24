@@ -13,6 +13,8 @@ data class AlarmGroup(
     val challengeDifficulty: Int = DEFAULT_CHALLENGE_DIFFICULTY,
     val snoozeMinutes: Int = 9,
     val volumeRampSeconds: Int = 0,
+    /** 0 = use system alarm stream volume; 1–100 overrides stream volume while ringing. */
+    val alarmVolumePercent: Int = 0,
 ) {
     companion object {
         const val CHALLENGE_NONE = "none"

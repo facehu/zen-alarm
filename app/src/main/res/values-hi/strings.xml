@@ -2,6 +2,7 @@
 <resources>
     <string name="app_name">ZenAlarm</string>
     <string name="alarm_notification_title">अलार्म बज रहा है</string>
+    <string name="alarm_notification_dismiss">बंद करें</string>
     <string name="alarm_channel_name">अलार्म</string>
     <string name="alarm_channel_description">सक्रिय अलार्म सूचनाएँ</string>
     <string name="next_alarm_notification_title">अगला अलार्म</string>
@@ -27,6 +28,10 @@
     <string name="ui_wake_challenge">जागने की चुनौती</string>
     <string name="ui_math_difficulty">गणित की कठिनाई</string>
     <string name="ui_snooze_minutes">स्नूज़ (मिनट)</string>
+    <string name="ui_group_alarm_volume">सिस्टम वॉल्यूम ओवरराइड</string>
+    <string name="ui_group_alarm_volume_system">सिस्टम</string>
+    <string name="ui_group_alarm_volume_percent">%1$d%%</string>
+    <string name="ui_group_alarm_volume_hint">0 = फ़ोन की अलार्म वॉल्यूम। 1–100 बजने के दौरान इस समूह के लिए सिस्टम अलार्म स्ट्रीम ओवरराइड करता है।</string>
     <string name="ui_volume_ramp_seconds">वॉल्यूम रैंप (सेकंड)</string>
     <string name="ui_volume_ramp_hint">0 = तुरंत पूरी आवाज़। अन्यथा धीरे-धीरे 100% तक बढ़ती है।</string>
     <string name="ui_delete_group">समूह हटाएँ</string>
@@ -46,6 +51,8 @@
     <string name="ui_continue">जारी रखें</string>
     <string name="ui_show_next_alarm_notification">नोटिफिकेशन में अगला अलार्म दिखाएँ</string>
     <string name="ui_show_next_alarm_hint">अगले चालू अलार्म का समय दिखाने वाली शांत, चल रही सूचना।</string>
+    <string name="ui_settings_version">संस्करण</string>
+    <string name="ui_settings_build_time">निर्मित</string>
     <string name="ui_done">हो गया</string>
     <string name="ui_confirm">पुष्टि करें</string>
     <string name="ui_delete">हटाएँ</string>
@@ -56,6 +63,7 @@
     <string name="ui_group_meta_no_challenge">कोई चुनौती नहीं</string>
     <string name="ui_group_meta_snooze">स्नूज़ %1$d मि</string>
     <string name="ui_group_meta_dnd_override">DND ओवरराइड</string>
+    <string name="ui_group_meta_alarm_volume">वॉल्यूम %1$d%%</string>
     <string name="ui_group_meta_vol_ramp">वॉल्यूम %1$d से</string>
     <string name="ui_tree_empty_groups">अभी कोई समूह नहीं। नीचे \"नया समूह\" दबाएँ।</string>
     <string name="ui_tree_empty_alarms">इस समूह में कोई अलार्म नहीं।</string>

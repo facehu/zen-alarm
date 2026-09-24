@@ -17,7 +17,7 @@ class AlarmRepository(context: Context) {
             return@withContext groups.first()
         }
         val id = dao.insertGroup(
-            AlarmGroup(name = "Default", enabled = true, challengeType = AlarmGroup.CHALLENGE_MATH),
+            AlarmGroup(name = "Default", enabled = true),
         )
         dao.getGroupById(id)!!
     }

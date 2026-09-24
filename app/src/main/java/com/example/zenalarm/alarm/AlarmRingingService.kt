@@ -1,6 +1,7 @@
 package com.example.zenalarm.alarm
 
 import android.animation.ValueAnimator
+import android.app.KeyguardManager
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -11,7 +12,9 @@ import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.media.RingtoneManager
 import android.os.Build
+import android.os.Handler
 import android.os.IBinder
+import android.os.Looper
 import android.os.PowerManager
 import android.content.pm.ServiceInfo
 import android.os.VibrationEffect
@@ -27,6 +30,21 @@ class AlarmRingingService : Service() {
     private var volumeAnimator: ValueAnimator? = null
     private var wakeLock: PowerManager.WakeLock? = null
     private val dndHelper by lazy { DndHelper(this) }
+    private val alarmStreamVolumeHelper by lazy { AlarmStreamVolumeHelper(this) }
+
+    private var activeAlarmId: Long = -1L
+    private var activeLabel: String = ""
+    private var volumeRampSeconds: Int = 0
+    private var alarmVolumePercent: Int = 0
+    private var soundSuppressedForCall = false
+
+    private val callStateHandler = Handler(Looper.getMainLooper())
+    private val callStatePollRunnable = object : Runnable {
+        override fun run() {
+            syncSoundWithCallState()
+            callStateHandler.postDelayed(this, CALL_STATE_POLL_MS)
+        }
+    }
 
     override fun onBind(intent: Intent?): IBinder? = null
 
@@ -47,38 +65,24 @@ class AlarmRingingService : Service() {
             return START_NOT_STICKY
         }
 
+        activeAlarmId = alarmId
         val (_, group, label) = alarmInfo
+        activeLabel = label
+        volumeRampSeconds = group.volumeRampSeconds
+        alarmVolumePercent = group.alarmVolumePercent
+
         acquireWakeLock()
         dndHelper.applyOverrideIfNeeded(group.overrideDnd)
-        startAlarmSound(group.volumeRampSeconds)
+        alarmStreamVolumeHelper.applyIfNeeded(alarmVolumePercent)
         startVibration()
+        syncSoundWithCallState()
+        startCallStatePolling()
 
         val isSnooze = intent?.getBooleanExtra(AlarmReceiver.EXTRA_IS_SNOOZE, false) ?: false
-        val fullScreenIntent = Intent(this, AlarmRingingActivity::class.java).apply {
-            putExtra(AlarmReceiver.EXTRA_ALARM_ID, alarmId)
-            putExtra(AlarmReceiver.EXTRA_IS_SNOOZE, isSnooze)
-            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        }
-
-        val fullScreenPendingIntent = PendingIntent.getActivity(
-            this,
-            alarmId.toInt(),
-            fullScreenIntent,
-            pendingIntentUpdateFlags(),
-        )
+        val fullScreenIntent = ringingActivityIntent(alarmId, isSnooze)
 
         createNotificationChannel()
-        val notification = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
-            .setContentTitle(getString(R.string.alarm_notification_title))
-            .setContentText(label)
-            .setCategory(NotificationCompat.CATEGORY_ALARM)
-            .setPriority(NotificationCompat.PRIORITY_MAX)
-            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-            .setOngoing(true)
-            .setFullScreenIntent(fullScreenPendingIntent, true)
-            .setContentIntent(fullScreenPendingIntent)
-            .build()
+        val notification = buildRingingNotification(fullScreenIntent)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             startForeground(
@@ -89,17 +93,94 @@ class AlarmRingingService : Service() {
         } else {
             startForeground(NOTIFICATION_ID, notification)
         }
-        startActivity(fullScreenIntent)
+
+        val keyguard = getSystemService(KEYGUARD_SERVICE) as KeyguardManager
+        if (!keyguard.isKeyguardLocked) {
+            startActivity(fullScreenIntent)
+        }
 
         return START_STICKY
     }
 
     override fun onDestroy() {
+        stopCallStatePolling()
         releaseWakeLock()
         stopAlarmSound()
         stopVibration()
+        alarmStreamVolumeHelper.restore()
         dndHelper.restorePreviousFilter()
         super.onDestroy()
+    }
+
+    private fun ringingActivityIntent(alarmId: Long, isSnooze: Boolean): Intent {
+        return Intent(this, AlarmRingingActivity::class.java).apply {
+            putExtra(AlarmReceiver.EXTRA_ALARM_ID, alarmId)
+            putExtra(AlarmReceiver.EXTRA_IS_SNOOZE, isSnooze)
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        }
+    }
+
+    private fun buildRingingNotification(fullScreenIntent: Intent): Notification {
+        val fullScreenPendingIntent = PendingIntent.getActivity(
+            this,
+            activeAlarmId.toInt(),
+            fullScreenIntent,
+            pendingIntentUpdateFlags(),
+        )
+
+        val dismissIntent = Intent(this, AlarmDismissReceiver::class.java).apply {
+            action = AlarmDismissReceiver.ACTION_DISMISS_ALARM
+            putExtra(AlarmReceiver.EXTRA_ALARM_ID, activeAlarmId)
+        }
+        val dismissPendingIntent = PendingIntent.getBroadcast(
+            this,
+            (activeAlarmId + DISMISS_REQUEST_CODE_OFFSET).toInt(),
+            dismissIntent,
+            pendingIntentUpdateFlags(),
+        )
+
+        return NotificationCompat.Builder(this, CHANNEL_ID)
+            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setContentTitle(getString(R.string.alarm_notification_title))
+            .setContentText(activeLabel)
+            .setStyle(NotificationCompat.BigTextStyle().bigText(activeLabel))
+            .setCategory(NotificationCompat.CATEGORY_ALARM)
+            .setPriority(NotificationCompat.PRIORITY_MAX)
+            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+            .setOngoing(true)
+            .setFullScreenIntent(fullScreenPendingIntent, true)
+            .setContentIntent(fullScreenPendingIntent)
+            .addAction(
+                R.drawable.ic_launcher_foreground,
+                getString(R.string.alarm_notification_dismiss),
+                dismissPendingIntent,
+            )
+            .build()
+    }
+
+    private fun startCallStatePolling() {
+        callStateHandler.removeCallbacks(callStatePollRunnable)
+        callStateHandler.post(callStatePollRunnable)
+    }
+
+    private fun stopCallStatePolling() {
+        callStateHandler.removeCallbacks(callStatePollRunnable)
+    }
+
+    private fun syncSoundWithCallState() {
+        if (activeAlarmId <= 0L) return
+        val inCall = CallStateHelper.isInCall(this)
+        if (inCall) {
+            if (mediaPlayer != null || volumeAnimator != null) {
+                stopAlarmSound()
+            }
+            soundSuppressedForCall = true
+        } else if (soundSuppressedForCall || mediaPlayer == null) {
+            if (mediaPlayer == null) {
+                startAlarmSound(volumeRampSeconds)
+            }
+            soundSuppressedForCall = false
+        }
     }
 
     private fun acquireWakeLock() {
@@ -197,6 +278,8 @@ class AlarmRingingService : Service() {
     companion object {
         const val CHANNEL_ID = "alarm_ringing"
         private const val NOTIFICATION_ID = 1001
+        private const val DISMISS_REQUEST_CODE_OFFSET = 50_000L
+        private const val CALL_STATE_POLL_MS = 500L
 
         fun stop(context: android.content.Context) {
             context.stopService(Intent(context, AlarmRingingService::class.java))

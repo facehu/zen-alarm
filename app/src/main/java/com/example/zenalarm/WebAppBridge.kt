@@ -35,6 +35,9 @@ class WebAppBridge(
         return gson.toJson(
             AppSettingsState(
                 showNextAlarmNotification = appSettings.showNextAlarmNotification,
+                versionName = BuildConfig.VERSION_NAME,
+                versionCode = BuildConfig.VERSION_CODE,
+                buildTimeIso = BuildConfig.BUILD_TIME_ISO,
             ),
         )
     }
@@ -153,6 +156,9 @@ class WebAppBridge(
 
     private data class AppSettingsState(
         val showNextAlarmNotification: Boolean,
+        val versionName: String,
+        val versionCode: Int,
+        val buildTimeIso: String,
     )
 
     private data class ChallengeTypeOption(

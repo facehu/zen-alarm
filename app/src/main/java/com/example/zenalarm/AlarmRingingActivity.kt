@@ -1,6 +1,10 @@
 package com.example.zenalarm
 
 import android.annotation.SuppressLint
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
@@ -8,6 +12,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
 import com.example.zenalarm.alarm.AlarmReceiver
+import com.example.zenalarm.alarm.AlarmRingingController
 import com.example.zenalarm.alarm.AlarmRingingService
 import com.example.zenalarm.alarm.AlarmScheduler
 import com.example.zenalarm.alarm.MathChallenge
@@ -26,6 +31,16 @@ class AlarmRingingActivity : AppCompatActivity() {
     private var challenge: MathChallenge? = null
     private var challengeSolved = false
     private var challengeType: String = AlarmGroup.CHALLENGE_NONE
+
+    private val dismissedReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            if (intent?.action != AlarmRingingController.ACTION_ALARM_DISMISSED) return
+            val dismissedId = intent.getLongExtra(AlarmRingingController.EXTRA_ALARM_ID, -1L)
+            if (dismissedId == alarmId) {
+                finish()
+            }
+        }
+    }
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,6 +90,13 @@ class AlarmRingingActivity : AppCompatActivity() {
 
         webView.addJavascriptInterface(bridge, "AndroidBridge")
         WebViewHelper.loadAssetHtml(webView, "ringing.html")
+
+        val dismissedFilter = IntentFilter(AlarmRingingController.ACTION_ALARM_DISMISSED)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(dismissedReceiver, dismissedFilter, RECEIVER_NOT_EXPORTED)
+        } else {
+            registerReceiver(dismissedReceiver, dismissedFilter)
+        }
     }
 
     private fun configureLockScreenBehavior() {
@@ -107,23 +129,15 @@ class AlarmRingingActivity : AppCompatActivity() {
     }
 
     private fun handleDismiss() {
-        runBlocking {
-            val dao = AlarmDatabase.getInstance(this@AlarmRingingActivity).alarmDao()
-            val alarm = dao.getAlarmById(alarmId) ?: return@runBlocking
-            val scheduler = AlarmScheduler(this@AlarmRingingActivity)
-
-            if (alarm.enabled) {
-                scheduler.scheduleAlarm(alarm)
-            } else {
-                scheduler.cancelAlarm(alarm.id)
-            }
-        }
-        AlarmRingingService.stop(this)
-        NextAlarmNotification.update(this)
+        AlarmRingingController.dismissAlarm(this, alarmId)
         finish()
     }
 
     override fun onDestroy() {
+        try {
+            unregisterReceiver(dismissedReceiver)
+        } catch (_: IllegalArgumentException) {
+        }
         webView.destroy()
         super.onDestroy()
     }

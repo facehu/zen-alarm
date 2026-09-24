@@ -109,11 +109,14 @@ function applyMainPageI18n() {
         labelGroupChallenge: "ui_wake_challenge",
         labelGroupDifficulty: "ui_math_difficulty",
         labelGroupSnooze: "ui_snooze_minutes",
+        labelGroupAlarmVolume: "ui_group_alarm_volume",
         labelGroupVolumeRamp: "ui_volume_ramp_seconds",
         labelAlarmTime: "ui_time",
         labelAlarmLabel: "ui_label",
         labelAlarmEnabled: "ui_alarm_enabled",
         labelSettingShowNextAlarm: "ui_show_next_alarm_notification",
+        labelSettingsVersion: "ui_settings_version",
+        labelSettingsBuildTime: "ui_settings_build_time",
     };
     Object.entries(labelText).forEach(([id, key]) => {
         const el = document.getElementById(id);
@@ -127,6 +130,7 @@ function applyMainPageI18n() {
     if (repeatLegend) repeatLegend.textContent = t("ui_repeat");
 
     const hints = {
+        groupAlarmVolumeHint: "ui_group_alarm_volume_hint",
         groupVolumeRampHint: "ui_volume_ramp_hint",
         repeatHint: "ui_repeat_hint",
         settingShowNextAlarmHint: "ui_show_next_alarm_hint",
@@ -160,6 +164,10 @@ function applyMainPageI18n() {
     }
 
     layoutRepeatDayGrid();
+
+    if (typeof updateAlarmVolumeUi === "function") {
+        updateAlarmVolumeUi();
+    }
 
     document.documentElement.lang = document.documentElement.lang || "en";
 }

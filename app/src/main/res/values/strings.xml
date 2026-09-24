@@ -2,6 +2,7 @@
 <resources>
     <string name="app_name">ZenAlarm</string>
     <string name="alarm_notification_title">Alarm ringing</string>
+    <string name="alarm_notification_dismiss">Dismiss</string>
     <string name="alarm_channel_name">Alarms</string>
     <string name="alarm_channel_description">Active alarm notifications</string>
     <string name="next_alarm_notification_title">Next alarm</string>
@@ -27,6 +28,10 @@
     <string name="ui_wake_challenge">Wake-up challenge</string>
     <string name="ui_math_difficulty">Math difficulty</string>
     <string name="ui_snooze_minutes">Snooze (minutes)</string>
+    <string name="ui_group_alarm_volume">Override system volume</string>
+    <string name="ui_group_alarm_volume_system">System</string>
+    <string name="ui_group_alarm_volume_percent">%1$d%%</string>
+    <string name="ui_group_alarm_volume_hint">0 = use the phone\'s alarm volume. 1–100 overrides the system alarm stream for this group while ringing.</string>
     <string name="ui_volume_ramp_seconds">Volume ramp (seconds)</string>
     <string name="ui_volume_ramp_hint">0 = full volume immediately. Otherwise fades from silent to 100%.</string>
     <string name="ui_delete_group">Delete group</string>
@@ -46,6 +51,8 @@
     <string name="ui_continue">Continue</string>
     <string name="ui_show_next_alarm_notification">Show next alarm in notification shade</string>
     <string name="ui_show_next_alarm_hint">Keeps a quiet ongoing notification with the time of your next enabled alarm.</string>
+    <string name="ui_settings_version">Version</string>
+    <string name="ui_settings_build_time">Built</string>
     <string name="ui_done">Done</string>
     <string name="ui_confirm">Confirm</string>
     <string name="ui_delete">Delete</string>
@@ -56,6 +63,7 @@
     <string name="ui_group_meta_no_challenge">No challenge</string>
     <string name="ui_group_meta_snooze">Snooze %1$dm</string>
     <string name="ui_group_meta_dnd_override">DND override</string>
+    <string name="ui_group_meta_alarm_volume">Vol %1$d%%</string>
     <string name="ui_group_meta_vol_ramp">Vol ramp %1$ds</string>
     <string name="ui_tree_empty_groups">No groups yet. Tap \"New group\" below.</string>
     <string name="ui_tree_empty_alarms">No alarms in this group.</string>

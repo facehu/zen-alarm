@@ -96,6 +96,30 @@ window.onStateChanged = function (data) {
     renderTree();
 };
 
+function formatBuildTime(iso) {
+    if (!iso) return "—";
+    const d = new Date(iso);
+    if (Number.isNaN(d.getTime())) return iso;
+    return d.toLocaleString();
+}
+
+function renderSettingsAbout() {
+    const versionEl = document.getElementById("settingsVersionValue");
+    const buildEl = document.getElementById("settingsBuildTimeValue");
+    if (!versionEl || !buildEl) return;
+
+    const name = appSettings.versionName;
+    const code = appSettings.versionCode;
+    if (name != null && code != null) {
+        versionEl.textContent = `${name} (${code})`;
+    } else if (name != null) {
+        versionEl.textContent = String(name);
+    } else {
+        versionEl.textContent = "—";
+    }
+    buildEl.textContent = formatBuildTime(appSettings.buildTimeIso);
+}
+
 window.onSettingsChanged = function (data) {
     if (!data) {
         appSettings = { showNextAlarmNotification: true };
@@ -112,6 +136,7 @@ window.onSettingsChanged = function (data) {
     if (checkbox && document.activeElement !== checkbox) {
         checkbox.checked = appSettings.showNextAlarmNotification !== false;
     }
+    renderSettingsAbout();
 };
 
 window.onPermissionsChanged = function (data) {
@@ -149,6 +174,9 @@ function groupMeta(group) {
         tf("ui_group_meta_snooze", group.snoozeMinutes),
     ];
     if (group.overrideDnd) parts.push(t("ui_group_meta_dnd_override"));
+    if (group.alarmVolumePercent > 0) {
+        parts.push(tf("ui_group_meta_alarm_volume", group.alarmVolumePercent));
+    }
     if (group.volumeRampSeconds > 0) {
         parts.push(tf("ui_group_meta_vol_ramp", group.volumeRampSeconds));
     }
@@ -288,6 +316,14 @@ function updateDifficultyUi() {
         labels[value] || labels[3] || "Normal";
 }
 
+function updateAlarmVolumeUi() {
+    const value = Number(document.getElementById("groupAlarmVolume").value);
+    const label = document.getElementById("groupAlarmVolumeLabel");
+    if (!label) return;
+    label.textContent =
+        value <= 0 ? t("ui_group_alarm_volume_system") : tf("ui_group_alarm_volume_percent", value);
+}
+
 function openGroupDialog(group) {
     document.getElementById("groupDialogTitle").textContent = group
         ? t("ui_edit_group")
@@ -297,11 +333,15 @@ function openGroupDialog(group) {
     document.getElementById("groupName").value = group?.name || "";
     document.getElementById("groupEnabled").checked = group?.enabled ?? true;
     document.getElementById("groupOverrideDnd").checked = group?.overrideDnd ?? false;
-    document.getElementById("groupChallenge").value = group?.challengeType || "none";
+    document.getElementById("groupChallenge").value = group
+        ? group.challengeType || "none"
+        : "none";
     document.getElementById("groupDifficulty").value = group?.challengeDifficulty || 3;
     document.getElementById("groupSnooze").value = group?.snoozeMinutes ?? 9;
+    document.getElementById("groupAlarmVolume").value = group?.alarmVolumePercent ?? 0;
     document.getElementById("groupVolumeRamp").value = group?.volumeRampSeconds ?? 0;
     updateDifficultyUi();
+    updateAlarmVolumeUi();
     openOverlay(groupDialog);
     document.getElementById("groupName").focus();
 }
@@ -339,6 +379,10 @@ function readGroupForm() {
         challengeType: document.getElementById("groupChallenge").value,
         challengeDifficulty: Number(document.getElementById("groupDifficulty").value),
         snoozeMinutes: Number(document.getElementById("groupSnooze").value),
+        alarmVolumePercent: Math.min(
+            100,
+            Math.max(0, Number(document.getElementById("groupAlarmVolume").value) || 0),
+        ),
         volumeRampSeconds: Math.max(
             0,
             Number(document.getElementById("groupVolumeRamp").value) || 0,
@@ -442,6 +486,7 @@ document.getElementById("groupOverrideDnd").addEventListener("change", (e) => {
 
 document.getElementById("groupChallenge").addEventListener("change", updateDifficultyUi);
 document.getElementById("groupDifficulty").addEventListener("input", updateDifficultyUi);
+document.getElementById("groupAlarmVolume").addEventListener("input", updateAlarmVolumeUi);
 
 document.getElementById("groupForm").addEventListener("submit", (e) => e.preventDefault());
 document.getElementById("alarmForm").addEventListener("submit", (e) => e.preventDefault());
@@ -493,6 +538,7 @@ function openSettingsDialog() {
     document.getElementById("settingShowNextAlarm").checked =
         appSettings.showNextAlarmNotification !== false;
     renderSettingsPermissions();
+    renderSettingsAbout();
     openOverlay(settingsDialog);
 }
 
