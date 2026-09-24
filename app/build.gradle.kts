@@ -45,6 +45,13 @@ android {
     }
 }
 
+android.applicationVariants.configureEach {
+    outputs.configureEach {
+        (this as com.android.build.gradle.internal.api.BaseVariantOutputImpl).outputFileName =
+            "${rootProject.name}-${buildType.name}-v${versionName}.apk"
+    }
+}
+
 dependencies {
     implementation("androidx.appcompat:appcompat:1.7.0")
     implementation("com.google.android.material:material:1.12.0")
